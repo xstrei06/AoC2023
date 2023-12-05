@@ -85,47 +85,22 @@ min_vals = [0 for i in idxs]
 idx = 0
 
 for i in idxs:
-    map_list1 = []
-    map_list2 = []
-    map_list3 = []
-    map_list4 = []
-    map_list5 = []
-    map_list6 = []
-    map_list7 = []
-    for j in range(seeds2[i], seeds2[i]+seeds2[i+1]):
-        if not map_list1 or j > map_list1[0][1] + map_list1[0][2] - 1:
-            map_list1 = list(filter(lambda arr: arr[1] <= j <= arr[1]+arr[2]-1, seed_to_soil))
-        s = j - map_list1[0][1] + map_list1[0][0] if map_list1 else j
-        if not map_list2 or j > map_list2[0][1] + map_list2[0][2] - 1:
-            map_list2 = list(filter(lambda arr: arr[1] <= s <= arr[1]+arr[2]-1, soil_to_fertilizer))
-        s = j - map_list2[0][1] + map_list2[0][0] if map_list2 else j
-        if not map_list3 or j > map_list3[0][1] + map_list3[0][2] - 1:
-            map_list3 = list(filter(lambda arr: arr[1] <= s <= arr[1]+arr[2]-1, fertilizer_to_water))
-        s = j - map_list3[0][1] + map_list3[0][0] if map_list3 else j
-        if not map_list4 or j > map_list4[0][1] + map_list4[0][2] - 1:
-            map_list4 = list(filter(lambda arr: arr[1] <= s <= arr[1]+arr[2]-1, water_to_light))
-        s = j - map_list4[0][1] + map_list4[0][0] if map_list4 else j
-        if not map_list5 or j > map_list5[0][1] + map_list5[0][2] - 1:
-            map_list5 = list(filter(lambda arr: arr[1] <= s <= arr[1]+arr[2]-1, light_to_temperature))
-        s = j - map_list5[0][1] + map_list5[0][0] if map_list5 else j
-        if not map_list6 or j > map_list6[0][1] + map_list6[0][2] - 1:
-            map_list6 = list(filter(lambda arr: arr[1] <= s <= arr[1]+arr[2]-1, temperature_to_humidity))
-        s = j - map_list6[0][1] + map_list6[0][0] if map_list6 else j
-        if not map_list7 or j > map_list7[0][1] + map_list7[0][2] - 1:
-            map_list7 = list(filter(lambda arr: arr[1] <= s <= arr[1]+arr[2]-1, humidity_to_location))
-        s = j - map_list7[0][1] + map_list7[0][0] if map_list7 else j
+    map_list = []
+    # first I did this, I found out which seed range to try, then I tried it, took about 4-5 hours
+    # don't try this at home xD
+    # rng = list(filter(lambda s: s % 10000 == 0, range(seeds2[i], seeds2[i]+seeds2[i+1])))
+    rng = range(seeds2[i], seeds2[i]+seeds2[i+1])
+    for j in rng:
+        s = do_mapping(j, seed_to_soil)
+        s = do_mapping(s, soil_to_fertilizer)
+        s = do_mapping(s, fertilizer_to_water)
+        s = do_mapping(s, water_to_light)
+        s = do_mapping(s, light_to_temperature)
+        s = do_mapping(s, temperature_to_humidity)
+        s = do_mapping(s, humidity_to_location)
         if s < min_vals[idx] or min_vals[idx] == 0:
             min_vals[idx] = s
-    print(min_vals[idx])
     idx += 1
 
 print('part one: ' + str(min(seeds)))
 print('part two: ' + str(min(min_vals)))
-
-#s = do_mapping(j, seed_to_soil)
-#s = do_mapping(s, soil_to_fertilizer)
-#s = do_mapping(s, fertilizer_to_water)
-#s = do_mapping(s, water_to_light)
-#s = do_mapping(s, light_to_temperature)
-#s = do_mapping(s, temperature_to_humidity)
-#s = do_mapping(s, humidity_to_location)
